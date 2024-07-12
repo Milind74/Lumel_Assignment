@@ -43,6 +43,19 @@ function TableRow({ row, setData, data }) {
       const newValue = row.value + (row.value * (percentage / 100));
       updateValue(row.id, newValue);
       setInputValue(''); // Reset input field after allocation
+      propagateChildChanges(row.id, newValue); // Propagate changes to children
+    }
+  };
+
+  const propagateChildChanges = (parentId, newValue) => {
+    const parentRow = data.rows.find(row => row.id === parentId);
+    if (parentRow && parentRow.children) {
+      const totalChildValue = parentRow.children.reduce((total, child) => total + child.value, 0);
+      parentRow.children.forEach(child => {
+        const childContribution = child.value / totalChildValue;
+        const updatedChildValue = newValue * childContribution;
+        updateValue(child.id, updatedChildValue, false);
+      });
     }
   };
 
