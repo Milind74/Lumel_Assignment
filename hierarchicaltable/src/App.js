@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import TableRow from './Component/TableRow';
 import './App.css';
+import TableRow from './Component/TableRow';
 
 const initialData = {
   rows: [
@@ -50,6 +50,22 @@ const initialData = {
 function App() {
   const [data, setData] = useState(initialData);
 
+  // Calculate Grand Total
+  const calculateGrandTotal = () => {
+    let total = 0;
+    data.rows.forEach(row => {
+      total += row.value;
+      if (row.children) {
+        row.children.forEach(child => {
+          total += child.value;
+        });
+      }
+    });
+    return total;
+  };
+
+  const grandTotal = calculateGrandTotal();
+
   return (
     <div>
       <table>
@@ -67,6 +83,11 @@ function App() {
           {data.rows.map((row) => (
             <TableRow key={row.id} row={row} setData={setData} data={data} allRows={data.rows} />
           ))}
+          <tr>
+            <td>Grand Total</td>
+            <td>{grandTotal.toFixed(2)}</td>
+            <td colSpan="4"></td>
+          </tr>
         </tbody>
       </table>
     </div>

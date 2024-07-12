@@ -4,10 +4,11 @@ import TableRow from './TableRow';
 function Table({ data, setData }) {
   const calculateGrandTotal = (rows) => {
     return rows.reduce((total, row) => {
-      if (row.children) {
-        return total + calculateGrandTotal(row.children);
+      if (!row.children) {
+        return total + row.value;
+      } else {
+        return total;
       }
-      return total + row.value;
     }, 0);
   };
 
@@ -32,7 +33,7 @@ function Table({ data, setData }) {
           ))}
           <tr>
             <td>Grand Total</td>
-            <td>{grandTotal}</td>
+            <td>{grandTotal.toFixed(2)}</td>
             <td colSpan="4"></td>
           </tr>
         </tbody>
